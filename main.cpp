@@ -35,7 +35,7 @@ struct Graph //Estrutura do grafo
 struct Candidato // Estrutura auxiliar
 {
 Node no; // O nó em si
-float score; // Score atribuído pela eurística
+float score; // Score atribuído pela heurística
 };
 
 
@@ -223,7 +223,7 @@ for (auto u:v){
 Candidato c; 
 c.no = u;
 if (consulta_dist(g,u.id,n.id)>0){
-c.score = (pow(u.s,2))/(consulta_dist(g,u.id,n.id)); // euristica utilizada para teste: s²/distancia(i,j)
+c.score = (pow(u.s,2))/(consulta_dist(g,u.id,n.id)); // heurística utilizada para teste: s²/distancia(i,j)
 candidatos->push_back(c);
 }
 }
