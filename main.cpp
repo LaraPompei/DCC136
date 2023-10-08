@@ -5,38 +5,12 @@
 #include <time.h>
 #include <chrono>
 #include <math.h>
+#include "Graph.h"
+#include "node.h"
 
 using namespace std;
 using namespace std::chrono;
 
-
-struct Node
-{   bool hotel; // É hotel?
-    int id;  // id do nó
-    float x; // coordenada x
-    float y; // coordenada y
-    float s; // Valor da pontuação
-};
-
-
-
-struct Graph //Estrutura do grafo
-{
-    
-  vector<Node> Nos; //Vetor de nós
-  int nTrip;  // N de trips
-  int H; // N de hotéis extras
-  int N;  // N de nós +2 
-  list<float> TripLength; // Lista com o valor máximo de cada trip
-  float TMax; // Distância máxima da tour
-  float *dist;  // Vetor que armazena a matriz triangular superior ignorando a inferior e a diagonal principal
-};
-
-struct Candidato // Estrutura auxiliar
-{
-Node no; // O nó em si
-float score; // Score atribuído pela heurística
-};
 
 
 Graph leitura_instancia(int selecionar){        //Funcao para a leitura das instancias
@@ -87,108 +61,121 @@ Graph *g = new Graph;
 
 int i = 0 ;
 
+int aux;
+float aux2;
 
-leitor >> g->N;
-leitor >> g->H;
-leitor >> g->nTrip;
+leitor >> aux; g->setN(aux);
+leitor >> aux; g->setH(aux);
+leitor >> aux; g->setnTrip(aux);
 
 getline(leitor,linha);
-leitor >> g->TMax;
+leitor >> aux2; g->setTMax(aux2);
 
 getline(leitor,linha);
 
-float aux = 0;
 
-for (int k = 0; k < g->nTrip; k++){
-    leitor >> aux;
-    g->TripLength.push_back(aux);
-}
+list<float> aux3;
+for (int k = 0; k < g->getnTrip(); k++){
+    leitor >> aux2;
+    aux3.push_back(aux);
+
+}g->setTripLength(aux3);
+
+
 getline(leitor,linha);
 getline(leitor,linha);
 
 Node z;
-
-leitor >> aux;
-z.id = i;
-z.x = aux;
-leitor >> aux;
-z.y = aux;
-leitor >> aux;
-z.s = aux;
-z.hotel = true;
-g->Nos.push_back(z);
-i++;
-getline(leitor,linha);
-
-leitor >> aux;
-z.id = i;
-z.x = aux;
-leitor >> aux;
-z.y = aux;
-leitor >> aux;
-z.s = aux;
-z.hotel = true;
-g->Nos.push_back(z);
+float aux4;
+vector <Node> auxNode;
+leitor >> aux4;
+std::cout<<aux<<endl;
+z.setId(i) ;
+z.setX(aux4);
+leitor >> aux4;
+z.setY(aux4);
+leitor >> aux4;
+z.setScore(aux4);
+z.setHotel(true);
+auxNode.push_back(z);
 i++;
 getline(leitor,linha);
 
 
 
-for(int k = 0; k < g->H; k++){
-leitor >> aux;
-z.id = i;
-z.x = aux;
-leitor >> aux;
-z.y = aux;
-leitor >> aux;
-z.s = aux;
-z.hotel = true;
-g->Nos.push_back(z);
+leitor >> aux4;
+z.setId(i) ;
+z.setX(aux4);
+leitor >> aux4;
+z.setY(aux4);
+leitor >> aux4;
+z.setScore(aux4);
+z.setHotel(true);
+auxNode.push_back(z);
 i++;
 getline(leitor,linha);
 
-}
 
 
-
-
-
-
-for(int k = 0; k < g->N-2; k++){
-leitor >> aux;
-z.id = i;
-z.x = aux;
-leitor >> aux;
-z.y = aux;
-leitor >> aux;
-z.s = aux;
-z.hotel = false;
-g->Nos.push_back(z);
+for(int k = 0; k < g->getH(); k++){
+leitor >> aux4;
+z.setId(i) ;
+z.setX(aux4);
+leitor >> aux4;
+z.setY(aux4);
+leitor >> aux4;
+z.setScore(aux4);
+z.setHotel(true);
+auxNode.push_back(z);
 i++;
 getline(leitor,linha);
 
 }
 
 
-int k = g->H+g->N;
-g->dist = new float [(((k*k)-k)/2)];
+
+
+
+
+for(int k = 0; k < g->getN()-2; k++){
+leitor >> aux4;
+z.setId(i) ;
+z.setX(aux4);
+leitor >> aux4;
+z.setY(aux4);
+leitor >> aux;
+z.setScore(aux4);
+z.setHotel(true);
+auxNode.push_back(z);
+i++;
+getline(leitor,linha);
+
+}
+g->setNodes(auxNode);
+
+int k = g->getH()+g->getN();
+float *auxDist = new float [(((k*k)-k)/2)];
+
 int cont = 0;
 for(int i = 0; i < k; i++){
     for(int j = i+1; j<k; j++){
         
-        float val = sqrt(pow((g->Nos.at(j).x) - (g->Nos.at(i).x),2) + pow((g->Nos.at(j).y )- (g->Nos.at(i).y),2));
+        float val = sqrt(pow((auxNode.at(j).getX()) - (auxNode.at(i).getX()),2) + pow((auxNode.at(j).getY() )- auxNode.at(i).getY(),2));
         
         if (i < j){
-        g->dist[((i + (((j-1)*j)/2)))] = val;
+        auxDist[((i + (((j-1)*j)/2)))] = val;
         }
-        else
-        g->dist[((j + (((i-1)*i)/2)))] = val;
+        else{
+        auxDist[((j + (((i-1)*i)/2)))] = val;}
+    cont++;
+   
+    
     }
 
 
 }
 
-
+g->setDist(auxDist);
 
 
 
@@ -198,65 +185,29 @@ return *g;
 }
 
 
-float consulta_dist(Graph g, int i, int j){ // Função para consultar no vetor a distância entre o nó i e j
-int x, y;
-if(i == j){  // A distância de um nó para ele mesmo é zero e isso não é armazenado
-    return 0.0;
-}
-else if(i > j){ // Caso i > j trocamos 
-    x = j;
-    y = i;
-
-}
-else{
-    x =i;
-    y =j;
-}
-return g.dist[((x + (((y-1)*y)/2)))]; // A função vai retornar o valor desejado
-
-}
-
-list <Candidato> Rank(Graph g, vector<Node> v, Node n){ // Função para ranquear os candidatos 
-
-list <Candidato> *candidatos = new list<Candidato>;
-for (auto u:v){
-Candidato c; 
-c.no = u;
-if (consulta_dist(g,u.id,n.id)>0){
-c.score = (pow(u.s,2))/(consulta_dist(g,u.id,n.id)); // heurística utilizada para teste: s²/distancia(i,j)
-candidatos->push_back(c);
-}
-}
-candidatos->sort([](const Candidato &f, const Candidato &s) { return f.score > s.score; }); // Ordena do maior para o menor
-return *candidatos;
-
-}
-
-void Solucao(Graph g){
-Node aux = g.Nos.at(0);
-vector<Node> naux = g.Nos;
-list <Candidato> l = Rank(g, naux,aux);
-list<float> trips = g.TripLength;
-
-for(auto x:l){
-
-cout<<"ID: "<<x.no.id<<" Score: "<<x.score<<endl; // A função só imprime os scores de cada nó
-
-}
-
-
-
-
-}
-
-
-
 int main(){
 
 
-Graph g = leitura_instancia(7); // chama a função para a instância x
+Graph g = leitura_instancia(5); // chama a função para a instância x
 
-Solucao(g);
+for(auto x:g.getNodes()){
+
+std::cout<<"ID: "<<x.getId()<<" "<<"x: "<<x.getX()<<" "<<"y: "<<x.getY()<<" "<<"s: "<<x.getScore()<<endl;
+
+
+}
+
+int k = g.getH()+g.getN();
+int i = ((k*k)-k)/2;
+float *vet = g.getDist();
+for(int j = 0; j < i; j++){
+
+std::cout<<vet[j]<<endl;
+
+
+}
+
+
 
 
 }
