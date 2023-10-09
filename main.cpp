@@ -89,13 +89,12 @@ Node z;
 float aux4;
 vector <Node> auxNode;
 leitor >> aux4;
-std::cout<<aux<<endl;
 z.setId(i) ;
 z.setX(aux4);
 leitor >> aux4;
 z.setY(aux4);
 leitor >> aux4;
-z.setScore(aux4);
+z.setScore(int(aux4));
 z.setHotel(true);
 auxNode.push_back(z);
 i++;
@@ -118,8 +117,8 @@ getline(leitor,linha);
 
 
 for(int k = 0; k < g->getH(); k++){
-leitor >> aux4;
 z.setId(i) ;
+leitor >> aux4;
 z.setX(aux4);
 leitor >> aux4;
 z.setY(aux4);
@@ -143,9 +142,9 @@ z.setId(i) ;
 z.setX(aux4);
 leitor >> aux4;
 z.setY(aux4);
-leitor >> aux;
-z.setScore(aux4);
-z.setHotel(true);
+leitor >> aux4;
+z.setScore(int(aux4));
+z.setHotel(false);
 auxNode.push_back(z);
 i++;
 getline(leitor,linha);
@@ -197,15 +196,6 @@ std::cout<<"ID: "<<x.getId()<<" "<<"x: "<<x.getX()<<" "<<"y: "<<x.getY()<<" "<<"
 
 }
 
-int k = g.getH()+g.getN();
-int i = ((k*k)-k)/2;
-float *vet = g.getDist();
-for(int j = 0; j < i; j++){
-
-std::cout<<vet[j]<<endl;
-
-
-}
 
 
 

@@ -2,7 +2,7 @@
 #define NODE_H
 
 class Node {
-private:
+public:
     bool hotel;
     int id;
     float x;
@@ -10,7 +10,7 @@ private:
     float s;
     float pontos;
 
-public:
+
     Node(); // Construtor padrão
     Node(bool isHotel, int nodeId, float posX, float posY, float size);
 

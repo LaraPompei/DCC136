@@ -35,6 +35,13 @@ public:
     void setTripLength(const std::list<float>& lengths);
     void setTMax(float tMax);
     void setDist(float *distances);
+
+    // Outros métodos
+    float CalculaDistancia(int i, int j);
+    bool VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis);
+    std::vector<Node> calculaSolucaoGreed();
+    void ImprimeSolucao(std::vector<Node> vec);
+    std::list<Node> OrdenaCandidatos(std::vector <Node> v, Node n);
 };
 
 #endif
