@@ -1,117 +1,149 @@
 #include "Graph.h"
-#include <math.h>
 
 Graph::Graph() {
     // Inicialize membros com valores padrão
-    nTrip = 0;
-    H = 0;
-    N = 0;
-    TMax = 0.0f;
+    h = 0;
+    n = 0;
+    numTrips = 0;
+    tamTour = 0;
 }
 
 // Métodos Get
-std::vector<Node> Graph::getNodes() const {
-    return Nodes;
+vector<Node> Graph::getNos(){
+    return Nos;
 }
 
-int Graph::getnTrip() const {
-    return nTrip;
+list<float> Graph::getTamTrip(){
+    return TamTrip;
 }
 
-int Graph::getH() const {
-    return H;
+int Graph::getH(){
+    return h;
 }
 
-int Graph::getN() const {
-    return N;
+int Graph::getN(){
+    return n;
 }
 
-std::list<float> Graph::getTripLength() const {
-    return TripLength;
+int Graph::getNumTrips(){
+    return numTrips;
 }
 
-float Graph::getTMax() const {
-    return TMax;
-}
-
-float* Graph::getDist()  {
-    return dist;
+int Graph::getTamTour(){
+    return tamTour;
 }
 
 // Métodos Set
-void Graph::setNodes(const std::vector<Node>& nodes) {
-    Nodes = nodes;
+void Graph::setH(int h){
+    this->h = h;
 }
 
-void Graph::setnTrip(int trips) {
-    nTrip = trips;
+void Graph::setN(int n){
+    this->n = n;
 }
 
-void Graph::setH(int h) {
-    H = h;
+void Graph::setH0(Node h){
+    H0 = h;
 }
 
-void Graph::setN(int n) {
-    N = n;
+void Graph::setH1(Node h){
+    H1 = h;
 }
 
-void Graph::setTripLength(const std::list<float>& lengths) {
-    TripLength = lengths;
+
+void Graph::setNumTrips(int numTrips){
+    this->numTrips = numTrips;
 }
 
-void Graph::setTMax(float tMax) {
-    TMax = tMax;
+void Graph::setTamTour(int tamTour){
+    this->tamTour = tamTour;
 }
 
-void Graph::setDist(float *distances) {
-    dist = distances;
+void Graph::setNos(vector<Node>& nos){
+    Nos = nos;
 }
 
-float Graph::CalculaDistancia(int i, int j){
+void Graph::setTamTrips(float tamTrip){
+    TamTrip.push_back(tamTrip);
+}
 
-if (i == j)
-    return 0.0;
+/*float Graph::CalculaDistancia(Node n1, Node n2){
+    
+    if ((n1.getX() == n2.getX())&&(n1.getY() == n2.getY()))
+        return 0.0;
 
-else if(i < j)
-    return dist[((i + (((j-1)*j)/2)))];
+    else if(i < j)
+        return dist[((i + (((j-1)*j)/2)))];
 
-else
-    return dist[((j + (((i-1)*i)/2)))];
-
-
+    else
+        return dist[((j + (((i-1)*i)/2)))];
 
 }
 
 bool Graph::VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis){
 
-for(auto i:hoteis){
+    for(auto i:hoteis){
+        if(val - CalculaDistancia(n.getId(),i.getId()) > 0)
+            return true;
+    }
 
-if(val - CalculaDistancia(n.getId(),i.getId()) > 0)
-    return true;
+    return false;
+}
+*/
 
+bool Graph::comparacao(Node f, Node s){
+    return (f.getRazao() > s.getRazao());
+}
 
+list<Node> Graph::OrdenaCandidatos(Node n){
+
+    list<Node> Candidatos;
+    copy(Nos.begin(), Nos.end(), Candidatos.begin());
+
+    for(auto i:Candidatos){
+        if((i.getX() == n.getX() && i.getY() == n.getY()) || i.getVisitado() == 1)
+            continue;
+        else
+            i.setRazao((pow(i.getScore(),2))/i.getDistancia(n.getId()));
+    }
+    cout<<"sorting"<<endl;
+    //Precisa ordenar o vetor, esta dando erro
+    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), [](Node f, Node s) {return f.getRazao() > s.getRazao();});
+    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), comparacao());
+    return Candidatos;
 
 }
 
-return false;
-
-
+void Graph::AddNo(Node no){
+    no.setId(Nos.size());       //define uma ID beaseada na quantidade de nos ja existentes no grafo
+    for(auto i:Nos){            //calcula a distancia do novo no para cada no
+        i.atualizaDistancia(no);
+        no.atualizaDistancia(i);
+    }
+    no.atualizaDistancia(no);   //define a distancia de um no para ele mesmo
+    Nos.push_back(no);  //insere o no no grafo
 }
 
-
-std::list<Node> Graph::OrdenaCandidatos(std::vector <Node> v, Node n){
-
-std::list<Node> Candidatos;
-std::copy(v.begin(), v.end(), Candidatos.begin());
-
-for(auto i:Candidatos)
-i.setPontos((pow(i.getScore(),2))/(CalculaDistancia(i.getId(), n.getId())));
-
-
-Candidatos.sort([](const Node &f, const Node &s) { return f.pontos > s.pontos; });
-
-
-
-return Candidatos;
-
+void Graph::CalculaSolucao(){
+    cout<<"X:"<<Nos[0].getX()<<" Y:"<<Nos[0].getY()<<endl;
+    cout<<"Tentando inserir"<<endl;
+    for(int i = 0; i<numTrips;i++)
+        Inserir((TamTrip.begin(), i));
 }
+
+//metodos da busca local
+
+
+void Graph::Inserir(float trip){
+    cout<<"Ordenando Nos"<<endl;
+    list<Node> candidatos = OrdenaCandidatos(Nos[0]);
+    cout<<"inserindo Nos";
+    float sum = 0;
+    for(auto i:candidatos){
+        if((sum+i.getRazao())<trip){
+            sum+=i.getRazao();
+            Solucao.push_back(i);
+        }
+    }
+} 
+
