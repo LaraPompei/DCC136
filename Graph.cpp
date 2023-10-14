@@ -91,25 +91,30 @@ bool Graph::VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis
 }
 */
 
-bool Graph::comparacao(Node f, Node s){
+bool Graph::Comparacao(Node f, Node s){
     return (f.getRazao() > s.getRazao());
 }
 
 list<Node> Graph::OrdenaCandidatos(Node n){
-
+    cout<<"Criando lista de candidatos"<<endl;
     list<Node> Candidatos;
-    copy(Nos.begin(), Nos.end(), Candidatos.begin());
-
+    cout<<"Copiando os nos para o candidatos"<<endl;
+    copy(Nos.begin(), Nos.end(), back_inserter(Candidatos));
+    
+    cout<<"iterando os candidatos afim da armazenar a razao de cada um deles"<<endl;
     for(auto i:Candidatos){
-        if((i.getX() == n.getX() && i.getY() == n.getY()) || i.getVisitado() == 1)
+        if((i.getX() == n.getX() && i.getY() == n.getY()) || i.getVisitado() == 1){
+	    cout<<"nao entrou pra solucao"<<endl;
             continue;
-        else
+	}else{
+	    cout<<"entrei para a solucao"<<endl;
             i.setRazao((pow(i.getScore(),2))/i.getDistancia(n.getId()));
+	}
     }
     cout<<"sorting"<<endl;
     //Precisa ordenar o vetor, esta dando erro
-    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), [](Node f, Node s) {return f.getRazao() > s.getRazao();});
-    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), comparacao());
+    Candidatos.sort(Candidatos.begin(),Candidatos.end(), [](Node f, Node s) {return f.getRazao() > s.getRazao();});
+    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), Comparacao);
     return Candidatos;
 
 }
@@ -127,8 +132,11 @@ void Graph::AddNo(Node no){
 void Graph::CalculaSolucao(){
     cout<<"X:"<<Nos[0].getX()<<" Y:"<<Nos[0].getY()<<endl;
     cout<<"Tentando inserir"<<endl;
-    for(int i = 0; i<numTrips;i++)
-        Inserir((TamTrip.begin(), i));
+    list<float>::iterator it = TamTrip.begin();
+    for(int i = 0; i<numTrips;i++){
+	advance(it,i);
+	Inserir(*it);
+    }
 }
 
 //metodos da busca local

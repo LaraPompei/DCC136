@@ -2,10 +2,11 @@
 #define GRAPH_H
 
 #include "Node.h"
+#include <iostream>
 #include <vector>
 #include <list>
 #include <math.h>
-
+#include <algorithm>
 using namespace std;
 class Graph {
     private:
@@ -52,7 +53,7 @@ class Graph {
         list<Node> OrdenaCandidatos(Node n);
         void AddNo(Node no);
         void CalculaSolucao();
-        bool comparacao(Node f, Node s);
+        bool Comparacao(Node f, Node s);
         
         //metodos da busca local
         void Inserir(float trip);   //seleciona os melhores nos para serem acrescentados na solucao

@@ -266,11 +266,11 @@ Graph leitura(int selecionar){
         noAux.setY(aux2);
         leitor >> aux;
         noAux.setScore(int(aux));
-        if(aux=0)
+        if(aux==0)
             noAux.setHotel(true);
         else
             noAux.setHotel(false);
-        /*if(k=0)
+        /*if(k==0)
             g->setH0(noAux);
         else if(k=1)
             g->setH1(noAux);
