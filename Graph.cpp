@@ -182,10 +182,16 @@ bool Graph::Comparacao(Node f, Node s){
 
 void Graph::ImprimeSolucao(){
 	cout<<"Solucao: "<<endl;
-	int id = 0;
+	int id = Solucao.front().getId();
+    cout<<"Id="<<id<<endl;
 	for(auto i:Solucao){
-		cout<<"X="<<i.getX()<<"\tY:"<<i.getY()<<"\tS:"<<i.getScore()<<"\tdistancia: "<<i.getDistancia(id)<<endl;
+		cout<<"X="<<i.getX();
+        cout<<"\tY:"<<i.getY();
+        cout<<"\tS:"<<i.getScore();
+        if(i.getId()!=id)
+            cout<<"\tdistancia: "<<i.getDistancia(id);
 		id = i.getId();
+        cout<<endl;
 	}
 }
 //metodos da busca local
