@@ -22,9 +22,9 @@ class Graph {
 
         //vetores e listas
         vector<Node> Nos;           //vetor que armazena os nos do grafo
-	vector<Node> Hotel;
-	vector<Node> Vertices;
-	list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
+	    vector<Node> Hotel;         //vetor que armazena os nos do grafo que sao hoteis
+	    vector<Node> Vertices;      //Vetor que armazena os nos que ainda nao foram visitados e nao sao hoteis
+    	list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
         vector<Node> Solucao;       //vetor que armazena a solucao inicial do grado        
     
     public:

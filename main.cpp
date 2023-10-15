@@ -190,7 +190,9 @@ Graph leitura(int selecionar){
             leitor.open("100-120-15-4.ophs");
             break;
         case  5:
+            cout<<"Abrindo arquivo 5"<<endl;
             leitor.open("100-200-15-10.ophs");
+            cout<<"abriu!"<<endl;
             break;
         case  6:
             leitor.open("102-35-3-3.ophs");
@@ -230,24 +232,25 @@ Graph leitura(int selecionar){
     }
 
     string linha;
-
     Graph *g = new Graph;
-    
+    cout<<"Iniciando a leitura"<<endl; 
     //le as primeiras linhas que contem informaçoes a respeito do grafo
     int aux;
     float aux2;
-
+    cout<<"Lendo N\tH\tNumTrips"<<endl;
     leitor >> aux; g->setN(aux);        //N
     leitor >> aux; g->setH(aux);        //H
     leitor >> aux; g->setNumTrips(aux);  //qtd de Trips que serao feitas
 
     getline(leitor,linha);
-
+    
+    cout<<"Lendo tamTour"<<endl;
     leitor >> aux2; g->setTamTour(aux2);       //tamanho da Tour
 
     getline(leitor,linha);
 
     //le o tamanho das trips
+    cout<<"Lendo tamanho das trips"<<endl;
     for (int k = 0; k < g->getNumTrips(); k++){
         leitor >> aux2;
         g->setTamTrips(aux2); 
@@ -258,8 +261,8 @@ Graph leitura(int selecionar){
     getline(leitor,linha);
 
     Node noAux;
-
-    for(int k = 0; k < g->getH(); k++){
+    cout<<"Lendo Hoteis"<<endl;
+    for(int k = 0; k < g->getH()+2; k++){
         leitor >> aux2;
         noAux.setX(aux2);
         leitor >> aux2;
@@ -269,13 +272,14 @@ Graph leitura(int selecionar){
         noAux.setHotel(true);
         if(k==0)
             g->setH0(noAux);
-        else if(k=1)
+        else if(k==1)
            g->setH1(noAux);
         
         g->AddNo(noAux);
         getline(leitor,linha);
     }
-    for(int k = 0; k < g->getN(); k++){
+    cout<<"Lendo Vertices"<<endl;
+    for(int k = 0; k < g->getN()-2; k++){
         leitor >> aux2;
         noAux.setX(aux2);
         leitor >> aux2;
@@ -292,10 +296,10 @@ Graph leitura(int selecionar){
 
 int main(){
 
-
+    cout<<"Instancias: "<<endl;
     Graph g = leitura(5); // chama a função para a instância x
 
-/*    cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
+    cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
     for(auto x:g.getTamTrip())
         cout<<x<<"\t";
     cout<<endl;
@@ -303,8 +307,8 @@ int main(){
 
     cout<<"ID: "<<x.getId()<<" "<<"x: "<<x.getX()<<" "<<"y: "<<x.getY()<<" "<<"s: "<<x.getScore()<<endl;
 
-}*/
-
+}
+    cout<<"Calculando a solucao"<<endl;
     g.CalculaSolucao();
     g.ImprimeSolucao();
 }

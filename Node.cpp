@@ -44,7 +44,7 @@ float Node::getScore(){
 }
 
 float Node::getRazao(){
-    return razao;
+    return float(razao);
 }
 
 float Node::getDistancia(int Id){
@@ -76,8 +76,8 @@ void Node::setScore(float score) {
     s = score;
 }
 
-void Node::setRazao(float razao){
-    this->razao = razao;
+void Node::setRazao(float Razao){
+    razao = Razao;
 }
 
 //Outros metodos

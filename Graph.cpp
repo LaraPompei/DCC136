@@ -92,28 +92,35 @@ bool Graph::VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis
 */
 
 list<Node> Graph::OrdenaCandidatos(Node n, bool hotel){
-    //cout<<"Criando lista de candidatos"<<endl;
     list<Node> Candidatos;
-    //cout<<"Copiando os nos para o candidatos"<<endl;
-    copy(Nos.begin(), Nos.end(), back_inserter(Candidatos));
+        Candidatos.clear();
     if(hotel){
+        cout<<"Ordenando lista de hoteis"<<endl;
 	    copy(Hotel.begin(), Hotel.end(), back_inserter(Candidatos));
 	}else{
-    	copy(Vertices.begin(), Vertices.end(), back_inserter(Candidatos));	
+        cout<<"Ordenando lista de vertices"<<endl;
+        for(auto i:Vertices){
+            if(!i.getHotel())
+                Candidatos.push_back(i);
+         }
+    	//copy(Vertices.begin(), Vertices.end(), back_inserter(Candidatos));	
 	}
-    //cout<<"iterando os candidatos afim da armazenar a razao de cada um deles"<<endl;
     for(auto i:Candidatos){
         if((i.getX() == n.getX() && i.getY() == n.getY()) || i.getVisitado() == 1){
-	    //cout<<"nao entrou pra solucao"<<endl;
+            cout<<"Ignorando o no X="<<i.getX()<<" Y="<<i.getY()<<endl;
             continue;
-	}else{
-	    //cout<<"entrei para a solucao"<<endl;
-            i.setRazao((pow(i.getScore(),2))/i.getDistancia(n.getId()));
-	}
+	    }else{
+            cout<<"Calculando a razao do no "<<i.getId()<<endl;
+            i.setRazao(i.getScore()/i.getDistancia(n.getId()));
+            cout<<"Razao="<<i.getRazao()<<endl<<"Distancia="<<i.getDistancia(n.getId())<<endl;
+	    }
     }
-    //cout<<"sorting"<<endl;
-    //Precisa ordenar o vetor, esta dando erro
+    cout<<"Sorting.."<<endl;
     Candidatos.sort([](Node f, Node s) {return f.getRazao() > s.getRazao();});
+    for(auto i:Candidatos)
+        cout<<"ID:"<<i.getId()<<"; Razao:"<<i.getRazao()<<"; Distancia:"<<i.getDistancia(n.getId())<<"\t";
+    cout<<endl;
+    cout<<"Candidatos ordenados com sucesso!"<<endl;
     return Candidatos;
 
 }
@@ -125,7 +132,7 @@ void Graph::AddNo(Node no){
         no.atualizaDistancia(i);
     }
     no.atualizaDistancia(no);   //define a distancia de um no para ele mesmo
-    Nos.push_back(no);  //insere o no no grafo
+    Nos.push_back(no);          //insere o no no grafo
 	if(no.getHotel()){
 		Hotel.push_back(no);
 	}else{
@@ -134,11 +141,14 @@ void Graph::AddNo(Node no){
 }
 
 void Graph::CalculaSolucao(){
-    //cout<<"X:"<<Nos[0].getX()<<" Y:"<<Nos[0].getY()<<endl;
-    //cout<<"Tentando inserir"<<endl;
+    cout<<"X:"<<H0.getX()<<" Y:"<<H0.getY()<<endl;
+    cout<<"Tentando inserir H0 na solucao"<<endl<<endl;
+    Solucao.push_back(H0);
+    cout<<"Tentando inserir o proximo no"<<endl;
     list<float>::iterator it = TamTrip.begin();
     for(int i = 0; i<numTrips;i++){
 		advance(it,i);
+        cout<<"Inserindo nos na "<<i<<"o trip de tamanho "<<*it<<endl;
 		Inserir(*it);
     }
 }
@@ -155,18 +165,38 @@ void Graph::ImprimeSolucao(){
 
 
 void Graph::Inserir(float trip){
-    //cout<<"Ordenando Nos"<<endl;
-    list<Node> candidatos = OrdenaCandidatos(Nos[0],Nos[0].getHotel());
-    //cout<<"inserindo Nos";
+    cout<<"Ordenando Nos para o primeiro candidato"<<endl;
+    list<Node> candidatos = OrdenaCandidatos(Solucao.back(),false); //ordena os melhores candidatos para serem incluidos na nossa nova solucao
+    
+    cout<<"inserindo Nos na trip"<<endl;
     float sum = 0;
-    int id =0;
+    bool final =0;
 	for(auto i:candidatos){
-        if((sum+i.getRazao())<trip && !i.getVisitado()){
-            sum+=i.getDistancia(id);
+        if((sum+i.getRazao())<trip && !i.getVisitado()){ 
+            cout<<"Candidato entra na solucao, Id="<<i.getId()<<endl<<"; Distancia="<<i.getDistancia(Solucao.back().getId())<<endl;
+            sum+=i.getDistancia(Solucao.back().getId());
+            cout<<"Adicionando candidato na solucao.."<<endl;
             Solucao.push_back(i);
-	    	id = i.getId();		
+            cout<<"Definindo no como visitado"<<endl;
+            i.setVisitado(true);
+            cout<<endl<<endl<<"Definindo nova ordem de candidatos.."<<endl;
+	    	candidatos = OrdenaCandidatos(i,false);		
         }
     }
+    cout<<"Selecionando hotel para concluir a trip"<<endl<<endl;
+    candidatos = OrdenaCandidatos(candidatos.back(),true);
+    if(sum+candidatos.front().getDistancia(candidatos.front().getDistancia(Solucao.back().getId()))<=trip){
+        cout<<"Adicionando hotel na solucao.. ID="<<candidatos.front().getId()<<"; Distancia="<<candidatos.front().getId()<<"; tamTrip="<<sum<<"; tamMaxTrip="<<trip<<endl<<endl;
+        Solucao.push_back(candidatos.front());
+    }else{
+        cout<<"Removendo ultimo ponto turisco acrescentado, pq nao conseguimos chegar ao hotel"<<endl;
+        while(sum+candidatos.front().getDistancia(candidatos.front().getDistancia(Solucao.back().getId()))<=trip){
+            cout<<"Removendo o elemento ID="<<Solucao.back().getId()<<endl;
+            sum -= (Solucao.back()).getDistancia(Solucao[(int(Solucao.size())-2)].getId());
+            Solucao.pop_back();
+        }
+        Solucao.push_back(candidatos.front());
+    }
+}
 
-} 
 

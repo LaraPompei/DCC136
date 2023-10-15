@@ -38,7 +38,7 @@ class Node {
         void setX(float posX);
         void setY(float posY);
         void setScore(float score);
-        void setRazao(float razao);
+        void setRazao(float Razao);
         
         //outros metodos
         void atualizaDistancia(Node novoNo); //calcula distancia do novo no adicionado para o atual
