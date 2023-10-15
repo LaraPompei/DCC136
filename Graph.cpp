@@ -91,30 +91,29 @@ bool Graph::VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis
 }
 */
 
-bool Graph::Comparacao(Node f, Node s){
-    return (f.getRazao() > s.getRazao());
-}
-
-list<Node> Graph::OrdenaCandidatos(Node n){
-    cout<<"Criando lista de candidatos"<<endl;
+list<Node> Graph::OrdenaCandidatos(Node n, bool hotel){
+    //cout<<"Criando lista de candidatos"<<endl;
     list<Node> Candidatos;
-    cout<<"Copiando os nos para o candidatos"<<endl;
+    //cout<<"Copiando os nos para o candidatos"<<endl;
     copy(Nos.begin(), Nos.end(), back_inserter(Candidatos));
-    
-    cout<<"iterando os candidatos afim da armazenar a razao de cada um deles"<<endl;
+    if(hotel){
+	    copy(Hotel.begin(), Hotel.end(), back_inserter(Candidatos));
+	}else{
+    	copy(Vertices.begin(), Vertices.end(), back_inserter(Candidatos));	
+	}
+    //cout<<"iterando os candidatos afim da armazenar a razao de cada um deles"<<endl;
     for(auto i:Candidatos){
         if((i.getX() == n.getX() && i.getY() == n.getY()) || i.getVisitado() == 1){
-	    cout<<"nao entrou pra solucao"<<endl;
+	    //cout<<"nao entrou pra solucao"<<endl;
             continue;
 	}else{
-	    cout<<"entrei para a solucao"<<endl;
+	    //cout<<"entrei para a solucao"<<endl;
             i.setRazao((pow(i.getScore(),2))/i.getDistancia(n.getId()));
 	}
     }
-    cout<<"sorting"<<endl;
+    //cout<<"sorting"<<endl;
     //Precisa ordenar o vetor, esta dando erro
-    Candidatos.sort(Candidatos.begin(),Candidatos.end(), [](Node f, Node s) {return f.getRazao() > s.getRazao();});
-    //Candidatos.sort(Candidatos.begin(),Candidatos.end(), Comparacao);
+    Candidatos.sort([](Node f, Node s) {return f.getRazao() > s.getRazao();});
     return Candidatos;
 
 }
@@ -127,31 +126,47 @@ void Graph::AddNo(Node no){
     }
     no.atualizaDistancia(no);   //define a distancia de um no para ele mesmo
     Nos.push_back(no);  //insere o no no grafo
+	if(no.getHotel()){
+		Hotel.push_back(no);
+	}else{
+		Vertices.push_back(no);
+	}
 }
 
 void Graph::CalculaSolucao(){
-    cout<<"X:"<<Nos[0].getX()<<" Y:"<<Nos[0].getY()<<endl;
-    cout<<"Tentando inserir"<<endl;
+    //cout<<"X:"<<Nos[0].getX()<<" Y:"<<Nos[0].getY()<<endl;
+    //cout<<"Tentando inserir"<<endl;
     list<float>::iterator it = TamTrip.begin();
     for(int i = 0; i<numTrips;i++){
-	advance(it,i);
-	Inserir(*it);
+		advance(it,i);
+		Inserir(*it);
     }
 }
 
+void Graph::ImprimeSolucao(){
+	cout<<"Solucao: "<<endl;
+	int id = 0;
+	for(auto i:Solucao){
+		cout<<"X="<<i.getX()<<"\tY:"<<i.getY()<<"\tS:"<<i.getScore()<<"\tdistancia: "<<i.getDistancia(id)<<endl;
+		id = i.getId();
+	}
+}
 //metodos da busca local
 
 
 void Graph::Inserir(float trip){
-    cout<<"Ordenando Nos"<<endl;
-    list<Node> candidatos = OrdenaCandidatos(Nos[0]);
-    cout<<"inserindo Nos";
+    //cout<<"Ordenando Nos"<<endl;
+    list<Node> candidatos = OrdenaCandidatos(Nos[0],Nos[0].getHotel());
+    //cout<<"inserindo Nos";
     float sum = 0;
-    for(auto i:candidatos){
-        if((sum+i.getRazao())<trip){
-            sum+=i.getRazao();
+    int id =0;
+	for(auto i:candidatos){
+        if((sum+i.getRazao())<trip && !i.getVisitado()){
+            sum+=i.getDistancia(id);
             Solucao.push_back(i);
+	    	id = i.getId();		
         }
     }
+
 } 
 

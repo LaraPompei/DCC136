@@ -7,7 +7,9 @@
 #include <list>
 #include <math.h>
 #include <algorithm>
+
 using namespace std;
+
 class Graph {
     private:
         //variaveis
@@ -20,7 +22,9 @@ class Graph {
 
         //vetores e listas
         vector<Node> Nos;           //vetor que armazena os nos do grafo
-        list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
+	vector<Node> Hotel;
+	vector<Node> Vertices;
+	list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
         vector<Node> Solucao;       //vetor que armazena a solucao inicial do grado        
     
     public:
@@ -50,11 +54,12 @@ class Graph {
         bool VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis);
         vector<Node> calculaSolucaoGreed();
         void ImprimeSolucao(std::vector<Node> vec);
-        list<Node> OrdenaCandidatos(Node n);
+        list<Node> OrdenaCandidatos(Node n, bool hotel);
         void AddNo(Node no);
         void CalculaSolucao();
         bool Comparacao(Node f, Node s);
-        
+       	void ImprimeSolucao(); 
+
         //metodos da busca local
         void Inserir(float trip);   //seleciona os melhores nos para serem acrescentados na solucao
         void Trocar();              //pega os vertices nao visitados e os inclui na posicao que aumentariam menos o tempo. Se nao for possivel fazer isso, seleciona um no que tenha um score                                     //inferior a ele e ja foi incluido e verifica se sua exclusao faria com que o novo no possa ser incluido

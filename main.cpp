@@ -259,25 +259,34 @@ Graph leitura(int selecionar){
 
     Node noAux;
 
-    for(int k = 0; k < (g->getH()+g->getN()); k++){
+    for(int k = 0; k < g->getH(); k++){
         leitor >> aux2;
         noAux.setX(aux2);
         leitor >> aux2;
         noAux.setY(aux2);
         leitor >> aux;
         noAux.setScore(int(aux));
-        if(aux==0)
-            noAux.setHotel(true);
-        else
-            noAux.setHotel(false);
-        /*if(k==0)
+        noAux.setHotel(true);
+        if(k==0)
             g->setH0(noAux);
         else if(k=1)
-            g->setH1(noAux);
-        */
+           g->setH1(noAux);
+        
         g->AddNo(noAux);
         getline(leitor,linha);
     }
+    for(int k = 0; k < g->getN(); k++){
+        leitor >> aux2;
+        noAux.setX(aux2);
+        leitor >> aux2;
+        noAux.setY(aux2);
+        leitor >> aux;
+        noAux.setScore(int(aux));
+        noAux.setHotel(false);
+        g->AddNo(noAux);
+        getline(leitor,linha);
+    }
+
     return *g;
 }
 
@@ -286,7 +295,7 @@ int main(){
 
     Graph g = leitura(5); // chama a função para a instância x
 
-    cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
+/*    cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
     for(auto x:g.getTamTrip())
         cout<<x<<"\t";
     cout<<endl;
@@ -294,10 +303,10 @@ int main(){
 
     cout<<"ID: "<<x.getId()<<" "<<"x: "<<x.getX()<<" "<<"y: "<<x.getY()<<" "<<"s: "<<x.getScore()<<endl;
 
-}
+}*/
 
     g.CalculaSolucao();
-
+    g.ImprimeSolucao();
 }
 
 
