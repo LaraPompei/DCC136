@@ -26,7 +26,7 @@ class Graph {
 	    vector<Node> Vertices;      //Vetor que armazena os nos que ainda nao foram visitados e nao sao hoteis
     	list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
         vector<Node> Solucao;       //vetor que armazena a solucao inicial do grado        
-    
+        vector<Node> Candidatos; 
     public:
         Graph(); // Construtor padrão
 
@@ -54,7 +54,7 @@ class Graph {
         bool VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis);
         vector<Node> calculaSolucaoGreed();
         void ImprimeSolucao(std::vector<Node> vec);
-        list<Node> OrdenaCandidatos(Node n, bool hotel);
+        void OrdenaCandidatos(Node n, bool hotel);
         void AddNo(Node no);
         void CalculaSolucao();
         bool Comparacao(Node f, Node s);

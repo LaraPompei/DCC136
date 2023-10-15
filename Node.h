@@ -14,7 +14,7 @@ class Node {
         float x;        //posicao do noh no eixo x
         float y;        //posicao do noh no eixo y
         float s;        //qtd de pontos do noh if(hotel)?s=0:s=[H+1...H+N](grafo)
-        float razao;    //armazena a razao entre (s^2/distancia) 
+        float razao;    //armazena a razao entre (s/distancia) 
         vector<float> distancia; //armazena a distancia do no atual para todos os outros
          
     public:

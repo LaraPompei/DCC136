@@ -44,7 +44,7 @@ float Node::getScore(){
 }
 
 float Node::getRazao(){
-    return float(razao);
+    return razao;
 }
 
 float Node::getDistancia(int Id){
