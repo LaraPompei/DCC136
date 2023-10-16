@@ -314,6 +314,7 @@ void Graph::Solve(){
                 solution.push_back(c);
                 noAtual = c;
                 score+=Nos[c].getScore();
+                distanciaRestante-=dist[noAtual][c];
             }
         }
         if(i == TamTrip.back())
@@ -330,6 +331,7 @@ void Graph::Solve(){
                 distanciaRestante += dist[noAtual][aux];
             }
         }
+        distanciaRestante-=dist[noAtual][hotel];
         solution.push_back(hotel);
    }
 
@@ -354,3 +356,23 @@ void Graph::CalculaDistancias(){
         }
     }
 }
+
+/*void Graph::MoveMelhor(){
+    float d = 0;
+    int aux,p;
+    for(auto i:solution){
+        if(i!=solution.front()&&i!=solution.back()){
+            d=dist[i][i-1]+dist[i][i+1]
+            for(auto j:solution){
+                if(dis[i][j]+dist[i][j+1]<d){
+                    aux = solution[i];
+                    p = find(solution.begin(), solution.end(), i);
+                    solution.erase(p);
+                    p = find(solution.begin(),solution.end(),j);
+                    solution.insert(aux,p+1);
+                }   
+            }
+        }else
+            continue;
+    }
+}*/
