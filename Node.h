@@ -42,6 +42,7 @@ class Node {
         
         //outros metodos
         void atualizaDistancia(Node novoNo); //calcula distancia do novo no adicionado para o atual
+        void calculaDistancia(vector<Node> Nos);
 };
 
 #endif

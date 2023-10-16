@@ -81,6 +81,17 @@ void Node::setRazao(float Razao){
 }
 
 //Outros metodos
+void Node::calculaDistancia(vector<Node> Nos){
+    for(auto i:Nos){
+        if(i.getId() == id)
+            distancia.push_back(0.0);
+        else
+            distancia.push_back(sqrt(pow((i.getX()-x),2)+pow((i.getY()-y),2)));
+    }
+}
 void Node::atualizaDistancia(Node novoNo){
+    if(novoNo.getId() == id)
+        distancia.push_back(0.0);
+    else
         distancia.push_back(sqrt(pow((novoNo.getX()-x),2)+pow((novoNo.getY()-y),2)));
 }

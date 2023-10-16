@@ -22,12 +22,24 @@ class Graph {
 
         //vetores e listas
         vector<Node> Nos;           //vetor que armazena os nos do grafo
-	    vector<Node> Hotel;         //vetor que armazena os nos do grafo que sao hoteis
+	    
+        vector<Node> Hotel;         //vetor que armazena os nos do grafo que sao hoteis
 	    vector<Node> Vertices;      //Vetor que armazena os nos que ainda nao foram visitados e nao sao hoteis
-    	list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
+    	
+        list<float> TamTrip;        //lista que armazena o tamanho de cada Trip
+        
         vector<Node> Solucao;       //vetor que armazena a solucao inicial do grado        
         vector<Node> Candidatos; 
-    public:
+        
+        //tentativa 2
+        vector<int> solution;
+        float distanciaRestante;
+        int noAtual;
+        int melhorNo;
+        float **dist;
+        int score;
+
+public:
         Graph(); // Construtor padrão
 
         // Métodos Get
@@ -66,6 +78,12 @@ class Graph {
         void Inverter();            //para cada vertice na solucao, testar se inverte-lo com o outro gera uma diminuicao no tempo total da trip
         void MoverMelhor();         //para cada vertice dentro da tour, verificar se muda-lo para a sua melhor posicao eh possivel
 
+        //parte 2
+        void CalculaDistancias();
+        void Solve();
+        vector<int> SelecionaMelhores(bool hotel);
+        int SelecionaHotel();
+        void BubbleSort(vector<int>& arr);
 };
 
 #endif

@@ -6,6 +6,7 @@ Graph::Graph() {
     n = 0;
     numTrips = 0;
     tamTour = 0;
+    melhorNo=-1;
 }
 
 // Métodos Get
@@ -90,17 +91,21 @@ bool Graph::VerificaViabilidadeHotel(Node n, float val, std::vector<Node> hoteis
     return false;
 }
 */
-
+/*
 void bubbleSort(vector<Node>& arr) {
     int n = arr.size();
     bool swapped;
-
+    Node aux;
     for (int i = 0; i < n - 1; i++) {
         swapped = false;
 
         for (int j = 0; j < n - 1 - i; j++) {
+            cout<<arr[j].getRazao()<<endl;
             if (arr[j].getScore() <  arr[j + 1].getScore()) {
-                swap(arr[j], arr[j + 1]);
+                //swap(arr[j], arr[j + 1]);
+                aux = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = aux;   
                 swapped = true;
             }
         }
@@ -110,9 +115,32 @@ void bubbleSort(vector<Node>& arr) {
         }
     }
 }
+*/
+void Graph::BubbleSort(vector<int>& arr) {
+    int n = arr.size();
+    bool swapped;
+    for (int i = 0; i < n - 1; i++) {
+        swapped = false;
+
+        for (int j = 0; j < n - 1 - i; j++) {
+            //cout<<Nos[arr[j]].getRazao()<<'\t';
+            if (Nos[arr[j]].getRazao() <  Nos[arr[j + 1]].getRazao()) {
+                swap(arr[j], arr[j + 1]);
+                swapped = true;
+            }
+        }
+        //cout<<endl;
+
+        if (!swapped) {
+            break;
+        }
+    }
+    //cout<<endl<<endl;
+}
 
 void Graph::OrdenaCandidatos(Node n, bool hotel){
     Candidatos.clear();
+    float d=0.0;
     if(hotel){
         cout<<"Ordenando lista de hoteis"<<endl;
 	    Candidatos = Hotel;
@@ -131,15 +159,18 @@ void Graph::OrdenaCandidatos(Node n, bool hotel){
             continue;
 	    }else{
             cout<<"Calculando a razao do no "<<i.getId()<<endl;
-            i.setRazao(i.getScore()/i.getDistancia(n.getId()));
-            cout<<"Razao="<<i.getRazao()<<endl<<"Distancia="<<i.getDistancia(n.getId())<<endl;
+            d = i.getDistancia(n.getId());
+            if(d>0){
+                i.setRazao(i.getScore()/i.getDistancia(n.getId()));
+                cout<<"Razao="<<i.getRazao()<<endl<<"Distancia="<<i.getDistancia(n.getId())<<endl;
+            }else{
+                cout<<"Erro entre os nos "<<i.getId()<<" e "<<n.getId()<<endl;
+           }
 	    }
     }
     cout<<"Sorting.."<<endl;
-    bubbleSort(Candidatos);
-    //quickSortDescending(Candidatos);
-    //Candidatos.sort([](const Node& f, const Node& s) {return f.getRazao() > s.getRazao();});
-    //Candidatos.sort(Comparacao);
+    //bubbleSort(Candidatos);
+    //Candidatos.sort([](Node f, Node s) {return f.getRazao() > s.getRazao();});
     for(auto i:Candidatos)
         cout<<"ID:"<<i.getId()<<"; Razao:"<<i.getRazao()<<"; Distancia:"<<i.getDistancia(n.getId())<<"\t";
     cout<<endl;
@@ -152,8 +183,8 @@ void Graph::AddNo(Node no){
     no.setId(Nos.size());       //define uma ID beaseada na quantidade de nos ja existentes no grafo
     for(auto i:Nos){            //calcula a distancia do novo no para cada no
         i.atualizaDistancia(no);
-        no.atualizaDistancia(i);
     }
+    no.calculaDistancia(Nos);
     no.atualizaDistancia(no);   //define a distancia de um no para ele mesmo
     Nos.push_back(no);          //insere o no no grafo
 	if(no.getHotel()){
@@ -234,4 +265,104 @@ void Graph::Inserir(float trip){
     }
 }
 
+vector<int> Graph::SelecionaMelhores(bool hotel){
+    int id =0;
+    vector<int> melhores;
+    if(!hotel)
+        for(auto i:Vertices){
+            id = i.getId();
+            if(id!=noAtual && !Nos[id].getVisitado()){
+                if(dist[id][noAtual]<=distanciaRestante){
+                    melhores.push_back(id);
+                    Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
+                    //cout<<id<<'\t';
+                }
+            }
+    }/*else{
+        for(auto i:Hotel){
+            id = i.getId();
+            if(id!=noAtual && !Nos[id].getVisitado()){
+                if(dist[id][noAtual]<=distanciaRestante){
+                    melhores.push_back(id);
+                    Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
+                    //cout<<id<<'\t';
+                }
+            }   
+        }
+    }*/
+    //cout<<endl;
+    BubbleSort(melhores);
+    for(auto i:melhores){
+       cout<<Nos[i].getRazao()<<'\t';
+    }
+    cout<<endl;
+    return melhores;
+}
 
+int Graph::SelecionaHotel(){
+    int id = 0;
+    int best = H0.getId();
+    for(auto i:Hotel){
+        id = i.getId();
+        if(dist[id][noAtual]<dist[id][best]){
+           best = id; 
+        }
+    }
+    return best;
+}
+
+void Graph::Solve(){
+    noAtual = H0.getId();
+    int aux,hotel =0;
+    score = 0;
+    cout<<"No inicial "<<noAtual<<endl;
+    for(auto i:TamTrip){
+        distanciaRestante = i;
+        cout<<"Distancia restante: "<<distanciaRestante<<"\t"<<endl;
+        vector<int> candidatos = SelecionaMelhores(false);
+        for(auto c:candidatos){
+            if(distanciaRestante-dist[noAtual][c]>0){
+                Nos[c].setVisitado(true);
+                solution.push_back(c);
+                noAtual = c;
+                score+=Nos[c].getScore();
+            }
+        }
+        if(i == TamTrip.back())
+            hotel = H1.getId();
+        else
+            hotel = SelecionaHotel();
+        if(distanciaRestante-dist[noAtual][hotel]>=0){
+           noAtual = hotel;
+        }else{
+            while(distanciaRestante-dist[noAtual][hotel]>=0){
+                aux = noAtual;
+                solution.pop_back();
+                noAtual = solution.back();
+                distanciaRestante += dist[noAtual][aux];
+            }
+        }
+        solution.push_back(hotel);
+   }
+
+   for(auto i:solution)
+       cout<<i<<'\t';
+   cout<<endl;
+   cout<<"Score = "<<score<<endl; 
+}
+
+void Graph::CalculaDistancias(){
+    dist = new float*[Nos.size()];
+    for(int i =0; i<Nos.size();i++){
+        dist[i] = new float[Nos.size()];
+    }
+    for(auto i:Nos){
+        for(auto j:Nos){
+            dist[i.getId()][j.getId()] = sqrt(pow((i.getX()-j.getX()),2)+pow((i.getY()-j.getY()),2));
+            if(dist[i.getId()][j.getId()] <0){
+                cout<<"Xi: "<<i.getX()<<"\tYi: "<<i.getY()<<endl<<"Xj: "<<j.getX()<<"\tYj: "<< j.getY()<<endl;
+                cout<<dist[i.getId()][j.getId()]<<endl<<endl;
+            }
+        }
+    }
+}

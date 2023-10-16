@@ -270,11 +270,13 @@ Graph leitura(int selecionar){
         leitor >> aux;
         noAux.setScore(int(aux));
         noAux.setHotel(true);
-        if(k==0)
+        if(k==0){
+            noAux.setId(0);
             g->setH0(noAux);
-        else if(k==1)
+        }else if(k==1){
+           noAux.setId(1);
            g->setH1(noAux);
-        
+        }
         g->AddNo(noAux);
         getline(leitor,linha);
     }
@@ -290,7 +292,8 @@ Graph leitura(int selecionar){
         g->AddNo(noAux);
         getline(leitor,linha);
     }
-
+    
+    g->CalculaDistancias();
     return *g;
 }
 
@@ -298,7 +301,7 @@ int main(){
 
     cout<<"Instancias: "<<endl;
     Graph g = leitura(5); // chama a função para a instância x
-
+    
     cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
     for(auto x:g.getTamTrip())
         cout<<x<<"\t";
@@ -309,8 +312,10 @@ int main(){
 
 }
     cout<<"Calculando a solucao"<<endl;
-    g.CalculaSolucao();
+/*    g.CalculaSolucao();
     g.ImprimeSolucao();
+*/
+    g.Solve();
 }
 
 
