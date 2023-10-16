@@ -81,7 +81,7 @@ public:
         //parte 2
         void CalculaDistancias();
         void Solve();
-        vector<int> SelecionaMelhores(bool hotel);
+        vector<int> SelecionaMelhores();
         int SelecionaHotel();
         void BubbleSort(vector<int>& arr);
 };

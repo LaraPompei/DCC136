@@ -265,31 +265,19 @@ void Graph::Inserir(float trip){
     }
 }
 
-vector<int> Graph::SelecionaMelhores(bool hotel){
+vector<int> Graph::SelecionaMelhores(){
     int id =0;
     vector<int> melhores;
-    if(!hotel)
-        for(auto i:Vertices){
-            id = i.getId();
-            if(id!=noAtual && !Nos[id].getVisitado()){
-                if(dist[id][noAtual]<=distanciaRestante){
-                    melhores.push_back(id);
-                    Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
-                    //cout<<id<<'\t';
-                }
+    for(auto i:Vertices){
+        id = i.getId();
+        if(id!=noAtual && !Nos[id].getVisitado()){
+            if(dist[id][noAtual]<=distanciaRestante){
+                melhores.push_back(id);
+                Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
+                //cout<<id<<'\t';
             }
-    }/*else{
-        for(auto i:Hotel){
-            id = i.getId();
-            if(id!=noAtual && !Nos[id].getVisitado()){
-                if(dist[id][noAtual]<=distanciaRestante){
-                    melhores.push_back(id);
-                    Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
-                    //cout<<id<<'\t';
-                }
-            }   
         }
-    }*/
+    }
     //cout<<endl;
     BubbleSort(melhores);
     for(auto i:melhores){
@@ -319,7 +307,7 @@ void Graph::Solve(){
     for(auto i:TamTrip){
         distanciaRestante = i;
         cout<<"Distancia restante: "<<distanciaRestante<<"\t"<<endl;
-        vector<int> candidatos = SelecionaMelhores(false);
+        vector<int> candidatos = SelecionaMelhores();
         for(auto c:candidatos){
             if(distanciaRestante-dist[noAtual][c]>0){
                 Nos[c].setVisitado(true);
@@ -346,7 +334,7 @@ void Graph::Solve(){
    }
 
    for(auto i:solution)
-       cout<<i<<'\t';
+       cout<<i<<'\t'<<"X:"<<Nos[i].getX()<<"\tY:"<<Nos[i].getY()<<"\tScore:"<<Nos[i].getScore()<<endl;
    cout<<endl;
    cout<<"Score = "<<score<<endl; 
 }
