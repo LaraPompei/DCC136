@@ -274,14 +274,14 @@ vector<int> Graph::SelecionaMelhores(){
             if(dist[id][noAtual]<=distanciaRestante){
                 melhores.push_back(id);
                 Nos[id].setRazao(Nos[id].getScore()/dist[id][noAtual]);
-                //cout<<id<<'\t';
+                //cout<<id<<'\t'<<dist[id][noAtual]<<endl;
             }
         }
     }
     //cout<<endl;
     BubbleSort(melhores);
     for(auto i:melhores){
-       cout<<Nos[i].getRazao()<<'\t';
+       cout<<Nos[i].getRazao()<<'\t'<<dist[i][noAtual]<<'\t';
     }
     cout<<endl;
     return melhores;
@@ -310,28 +310,38 @@ void Graph::Solve(){
         vector<int> candidatos = SelecionaMelhores();
         for(auto c:candidatos){
             if(distanciaRestante-dist[noAtual][c]>0){
+                //cout<<dist[noAtual][c]<<'\t';
+                distanciaRestante = distanciaRestante-dist[noAtual][c];
+                //cout<<dist[noAtual][c]<<'\t'<<endl;
                 Nos[c].setVisitado(true);
                 solution.push_back(c);
                 noAtual = c;
                 score+=Nos[c].getScore();
-                distanciaRestante-=dist[noAtual][c];
+                //distanciaRestante = distanciaRestante - dist[noAtual][c];
+                cout<<dist[noAtual][c]<<"\t"<<distanciaRestante<<endl;
             }
         }
         if(i == TamTrip.back())
             hotel = H1.getId();
         else
             hotel = SelecionaHotel();
+        cout<<dist[noAtual][hotel]<<endl;
         if(distanciaRestante-dist[noAtual][hotel]>=0){
+           cout<<"Hotel"<<endl;
            noAtual = hotel;
         }else{
+            cout<<"Nao cabe"<<endl;
             while(distanciaRestante-dist[noAtual][hotel]>=0){
                 aux = noAtual;
                 solution.pop_back();
                 noAtual = solution.back();
+                cerr<<"distanciaRestante:"<<distanciaRestante<<'\t';
                 distanciaRestante += dist[noAtual][aux];
+                cerr<<"distanciaRestante:"<<distanciaRestante<<endl;
             }
         }
         distanciaRestante-=dist[noAtual][hotel];
+        cout<<distanciaRestante<<endl;
         solution.push_back(hotel);
    }
 
