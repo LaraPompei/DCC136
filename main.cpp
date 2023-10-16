@@ -175,57 +175,100 @@ Graph leitura(int selecionar){
     switch (selecionar) // Algumas instâncias escolhidas para testes
     {
         case  0:
-            leitor.open("64-45-6-4.ophs");
+            leitor.open("64-45-1-2.ophs");
             break;
         case  1:
-            leitor.open("66-55-2-3.ophs");
+            leitor.open("64-70-3-4.ophs");
             break;
         case  2:
-            leitor.open("66-125-12-4.ophs");
+            leitor.open("64-75-12-5.ophs");
             break;
         case  3:
-            leitor.open("100-100-10-4.ophs");
+            leitor.open("64-80-15-4.ophs");
             break;
         case  4:
-            leitor.open("100-120-15-4.ophs");
+            leitor.open("66-50-6-4.ophs");
             break;
-        case  5:
-            cout<<"Abrindo arquivo 5"<<endl;
-            leitor.open("100-200-15-10.ophs");
-            cout<<"abriu!"<<endl;
+        case  5:            
+            leitor.open("66-60-5-3.ophs");            
             break;
         case  6:
-            leitor.open("102-35-3-3.ophs");
+            leitor.open("66-125-2-3.ophs");
             break;
         case  7:
-            leitor.open("T1-73-5-3.ophs");
+            leitor.open("66-125-10-4.ophs");
             break;
         case  8:
-            leitor.open("T3-95-1-2.ophs");
+            leitor.open("66-129-10-6.ophs");
             break;
         case  9:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("66-130-10-5.ophs");
             break;
         case 10:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("66-130-12-6.ophs");
             break;
         case 11:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("66-130-15-5.ophs");
             break;
         case 12:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("100-35-1-2.ophs");
             break;
         case 13:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("100-35-6-4.ophs");
             break;
         case 14:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("100-40-3-4.ophs");
             break;
         case 15:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("100-45-5-3.ophs");
             break;
         case 16:
-            leitor.open("100-80-10-6.ophs");
+            leitor.open("100-50-12-4.ophs");
+            break;
+        case 17:
+            leitor.open("100-80-10-5.ophs");
+            break;
+        case 18:
+            leitor.open("100-90-15-4.ophs");
+            break;
+        case 19:
+            leitor.open("100-110-10-6.ophs");
+            break;
+        case 20:
+            leitor.open("100-110-15-6.ophs");
+            break;
+        case 21:
+            leitor.open("100-120-15-8.ophs");
+            break;
+        case 22:
+            leitor.open("100-130-12-4.ophs");
+            break;
+        case 23:
+            leitor.open("100-150-15-10.ophs");
+            break;
+        case 24:
+            leitor.open("100-170-15-5.ophs");
+            break;
+        case 25:
+            leitor.open("100-180-12-5.ophs");
+            break;
+        case 26:
+            leitor.open("100-190-15-10.ophs");
+            break;
+        case 27:
+            leitor.open("100-200-10-4.ophs");
+            break;
+        case 28:
+            leitor.open("100-200-15-6.ophs");
+            break;
+        case 29:
+            leitor.open("100-240-12-6.ophs");
+            break;
+        case 30:
+            leitor.open("100-240-15-8.ophs");
+            break;
+        case 31:
+            leitor.open("102-60-2-3.ophs");
             break;
         default:
             break;
@@ -233,24 +276,24 @@ Graph leitura(int selecionar){
 
     string linha;
     Graph *g = new Graph;
-    cout<<"Iniciando a leitura"<<endl; 
+    
     //le as primeiras linhas que contem informaçoes a respeito do grafo
     int aux;
     float aux2;
-    cout<<"Lendo N\tH\tNumTrips"<<endl;
+    
     leitor >> aux; g->setN(aux);        //N
     leitor >> aux; g->setH(aux);        //H
     leitor >> aux; g->setNumTrips(aux);  //qtd de Trips que serao feitas
 
     getline(leitor,linha);
     
-    cout<<"Lendo tamTour"<<endl;
+    
     leitor >> aux2; g->setTamTour(aux2);       //tamanho da Tour
 
     getline(leitor,linha);
 
     //le o tamanho das trips
-    cout<<"Lendo tamanho das trips"<<endl;
+    
     for (int k = 0; k < g->getNumTrips(); k++){
         leitor >> aux2;
         g->setTamTrips(aux2); 
@@ -261,7 +304,7 @@ Graph leitura(int selecionar){
     getline(leitor,linha);
 
     Node noAux;
-    cout<<"Lendo Hoteis"<<endl;
+    
     for(int k = 0; k < g->getH()+2; k++){
         leitor >> aux2;
         noAux.setX(aux2);
@@ -280,7 +323,7 @@ Graph leitura(int selecionar){
         g->AddNo(noAux);
         getline(leitor,linha);
     }
-    cout<<"Lendo Vertices"<<endl;
+    
     for(int k = 0; k < g->getN()-2; k++){
         leitor >> aux2;
         noAux.setX(aux2);
@@ -299,23 +342,10 @@ Graph leitura(int selecionar){
 
 int main(){
 
-    cout<<"Instancias: "<<endl;
-    Graph g = leitura(5); // chama a função para a instância x
-    
-    cout<<"H:"<<g.getH()<<"\tN:"<<g.getN()<<"\tnumTrips:"<<g.getNumTrips()<<"\ttamTour:"<<g.getTamTour()<<endl;
-    for(auto x:g.getTamTrip())
-        cout<<x<<"\t";
-    cout<<endl;
-    for(auto x:g.getNos()){
-
-    cout<<"ID: "<<x.getId()<<" "<<"x: "<<x.getX()<<" "<<"y: "<<x.getY()<<" "<<"s: "<<x.getScore()<<endl;
-
-}
-    cout<<"Calculando a solucao"<<endl;
-/*    g.CalculaSolucao();
-    g.ImprimeSolucao();
-*/
-    g.Solve();
+   
+    Graph *g = new Graph; *g = leitura(0); // chama a função para a instância x
+     cout<<"Calculando a solucao"<<endl;
+    g->Solve(); delete g;
 }
 
 
